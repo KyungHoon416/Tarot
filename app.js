@@ -6,6 +6,9 @@ const messageTemplate = document.querySelector("#message-template");
 const cardPickerEl = document.querySelector("#card-picker");
 const cardGridEl = document.querySelector("#card-grid");
 const pickerStatusEl = document.querySelector("#picker-status");
+const directionPanelEl = document.querySelector("#direction-panel");
+const categoryEl = document.querySelector("#question-category");
+const filterEl = document.querySelector("#recommend-filter");
 
 const tarotSymbols = ["✦", "☾", "✶", "✷", "☉", "⚝", "✺", "◇"];
 const suitSymbols = {
@@ -16,9 +19,19 @@ const suitSymbols = {
   Pentacles: "◆"
 };
 
+const categoryTagBoost = {
+  연애: ["로맨스", "연결", "설렘"],
+  진로: ["성장", "결단", "도전"],
+  금전: ["성장", "정리", "결단"],
+  인간관계: ["연결", "회복", "사색"],
+  전체: []
+};
+
 let stage = "question";
 let pendingQuestion = "";
-let selectedCardIds = [];
+let pendingCategory = "연애";
+let pendingFilter = "all";
+let selectedCardStates = [];
 let tarotDeck = [];
 let novelRings = [];
 
@@ -33,6 +46,8 @@ function addMessage(role, text) {
 function setInputState(enabled, placeholder = "") {
   inputEl.disabled = !enabled;
   sendBtnEl.disabled = !enabled;
+  categoryEl.disabled = !enabled;
+  filterEl.disabled = !enabled;
   inputEl.placeholder = placeholder;
   if (enabled) inputEl.focus();
 }
@@ -52,7 +67,7 @@ function mapCardToTags(card) {
   addIf(/불안|혼란|상실|비탄|악몽|속박|붕괴|갈등|파멸/, "불안");
   addIf(/정리|종결|끝|결정|책임|질서|정의|한계|청산/, "정리");
   addIf(/희망|행운|성공|완성|회생|기쁨|보상|승인/, "희망");
-  addIf(/성장|학습|전문|숙련|연마|목표|확장/, "성장");
+  addIf(/성장|학습|전문|숙련|연마|목표|확장|재물|번영/, "성장");
   addIf(/치유|평온|수용|내면|성찰|회복|안식/, "회복");
   addIf(/결단|판단|선택|통제|리더십|의지/, "결단");
   addIf(/풍요|매력|기쁨|활력|영감|낙관/, "설렘");
@@ -62,18 +77,10 @@ function mapCardToTags(card) {
     tags.add("연결");
     tags.add("로맨스");
   }
-  if (card.suit === "Wands") {
-    tags.add("도전");
-  }
-  if (card.suit === "Swords") {
-    tags.add("정리");
-  }
-  if (card.suit === "Pentacles") {
-    tags.add("성장");
-  }
-  if (card.arcana === "Major") {
-    tags.add("변화");
-  }
+  if (card.suit === "Wands") tags.add("도전");
+  if (card.suit === "Swords") tags.add("정리");
+  if (card.suit === "Pentacles") tags.add("성장");
+  if (card.arcana === "Major") tags.add("변화");
 
   const fallback = ["변화", "성장", "회복"];
   for (const item of fallback) {
@@ -84,12 +91,24 @@ function mapCardToTags(card) {
   return [...tags];
 }
 
-function getTopTags(cards) {
+function getDirectionalTags(card, direction) {
+  if (direction === "upright") return card.tags;
+  const extra = new Set(["불안", "정리"]);
+  if (card.suit === "Cups") extra.add("회복");
+  return [...new Set([...card.tags, ...extra])];
+}
+
+function getTopTags(selectedCards, category) {
   const score = new Map();
-  cards.forEach((card) => {
-    card.tags.forEach((tag, idx) => {
-      score.set(tag, (score.get(tag) || 0) + (3 - idx));
+  selectedCards.forEach(({ card, direction }) => {
+    const tags = getDirectionalTags(card, direction);
+    tags.forEach((tag, idx) => {
+      score.set(tag, (score.get(tag) || 0) + (3 - Math.min(idx, 2)));
     });
+  });
+
+  (categoryTagBoost[category] || []).forEach((tag) => {
+    score.set(tag, (score.get(tag) || 0) + 2);
   });
 
   return [...score.entries()]
@@ -98,11 +117,29 @@ function getTopTags(cards) {
     .map(([tag]) => tag);
 }
 
-function recommendNovelRings(tags) {
+function matchesFilter(item, filterType) {
+  if (filterType === "all") return true;
+  if (filterType === "short") return item.length === "짧음";
+  if (filterType === "happy") return item.ending === "해피";
+  if (filterType === "romance") return item.romance_level === "강";
+  return true;
+}
+
+function recommendNovelRings(tags, category, filterType) {
   return novelRings
     .map((item) => {
-      const matches = item.tags.filter((tag) => tags.includes(tag));
-      return { ...item, score: matches.length };
+      const matchedTags = item.tags.filter((tag) => tags.includes(tag));
+      const categoryMatch = category !== "전체" && item.categories?.includes(category);
+      const filterMatch = matchesFilter(item, filterType);
+      const score = matchedTags.length + (categoryMatch ? 1 : 0) + (filterMatch ? 0.5 : -5);
+
+      return {
+        ...item,
+        score,
+        matchedTags,
+        categoryMatch,
+        filterMatch
+      };
     })
     .filter((item) => item.score > 0)
     .sort((a, b) => b.score - a.score)
@@ -110,7 +147,9 @@ function recommendNovelRings(tags) {
 }
 
 function saveSession(payload) {
-  localStorage.setItem("tarot-session", JSON.stringify(payload));
+  const prev = JSON.parse(localStorage.getItem("tarot-history") || "[]");
+  const next = [payload, ...prev].slice(0, 10);
+  localStorage.setItem("tarot-history", JSON.stringify(next));
 }
 
 async function loadNovelRings() {
@@ -141,29 +180,33 @@ async function loadTarotDeck() {
 }
 
 function updatePickerStatus() {
-  pickerStatusEl.textContent = `${selectedCardIds.length} / 3 선택됨`;
+  pickerStatusEl.textContent = `${selectedCardStates.length} / 3 선택됨`;
 }
 
 function syncCardButtons() {
-  const maxed = selectedCardIds.length >= 3;
+  const maxed = selectedCardStates.length >= 3;
   cardGridEl.querySelectorAll(".tarot-card-btn").forEach((button) => {
     const cardId = Number(button.dataset.cardId);
-    const isSelected = selectedCardIds.includes(cardId);
+    const selectedState = selectedCardStates.find((item) => item.id === cardId);
+    const isSelected = Boolean(selectedState);
+
     button.classList.toggle("selected", isSelected);
+    button.classList.toggle("reversed", isSelected && selectedState.direction === "reversed");
     button.disabled = maxed && !isSelected;
   });
 }
 
 function resetPicker() {
-  selectedCardIds = [];
+  selectedCardStates = [];
   updatePickerStatus();
   syncCardButtons();
+  renderDirectionPanel();
 }
 
 function openPicker() {
   stage = "pick";
   cardPickerEl.classList.add("active");
-  addMessage("bot", "좋아요. 이제 타로 카드 45장 중에서 딱 3장을 선택해주세요.");
+  addMessage("bot", "좋아요. 카드 3장을 고르고, 각 카드의 정방향/역방향을 직접 선택한 뒤 해석을 시작해주세요.");
   setInputState(false, "카드 선택 중...");
   resetPicker();
 }
@@ -199,51 +242,80 @@ function renderCardGrid() {
   cardGridEl.appendChild(fragment);
 }
 
-function formatCardDetail(card, positionLabel) {
-  const direction = Math.random() < 0.7 ? "upright" : "reversed";
-  const directionLabel = direction === "upright" ? "정방향" : "역방향";
-  const detailText =
-    direction === "upright" ? card.interpretation.upright : card.interpretation.reversed;
+function renderDirectionPanel() {
+  if (!selectedCardStates.length) {
+    directionPanelEl.innerHTML = '<p class="direction-help">카드를 먼저 선택해주세요.</p>';
+    return;
+  }
 
-  return {
-    summary: `${positionLabel}: ${card.nameKo} (${card.name})\n- 키워드: ${card.keywords.join(", ")}\n- ${directionLabel} 해석: ${detailText}`,
-    directionLabel
-  };
+  const rows = selectedCardStates
+    .map((state, idx) => {
+      const card = tarotDeck.find((item) => item.id === state.id);
+      if (!card) return "";
+      return `
+        <div class="direction-item">
+          <div class="direction-name">${idx + 1}. ${card.nameKo}</div>
+          <div class="direction-toggle">
+            <button class="dir-btn ${state.direction === "upright" ? "active" : ""}" data-action="direction" data-id="${state.id}" data-value="upright">정방향</button>
+            <button class="dir-btn ${state.direction === "reversed" ? "active" : ""}" data-action="direction" data-id="${state.id}" data-value="reversed">역방향</button>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+
+  directionPanelEl.innerHTML = `
+    ${rows}
+    <button class="reading-start-btn" data-action="start-reading" ${selectedCardStates.length !== 3 ? "disabled" : ""}>해석 시작</button>
+  `;
+}
+
+function formatCardDetail(card, positionLabel, direction) {
+  const directionLabel = direction === "upright" ? "정방향" : "역방향";
+  const detailText = direction === "upright" ? card.interpretation.upright : card.interpretation.reversed;
+
+  return `${positionLabel}: ${card.nameKo} (${card.name})\n- 키워드: ${card.keywords.join(", ")}\n- ${directionLabel} 해석: ${detailText}`;
 }
 
 function runReading() {
-  const cards = selectedCardIds
-    .map((id) => tarotDeck.find((item) => item.id === id))
-    .filter(Boolean);
+  const selectedCards = selectedCardStates
+    .map((state) => ({
+      ...state,
+      card: tarotDeck.find((item) => item.id === state.id)
+    }))
+    .filter((item) => item.card);
 
-  if (cards.length !== 3) return;
+  if (selectedCards.length !== 3) return;
 
-  const [current, obstacle, advice] = cards;
-  const currentText = formatCardDetail(current, "1) 현재");
-  const obstacleText = formatCardDetail(obstacle, "2) 장애물");
-  const adviceText = formatCardDetail(advice, "3) 조언");
+  const [current, obstacle, advice] = selectedCards;
 
   addMessage("bot", `질문 \"${pendingQuestion}\" 에 대한 리딩을 시작할게요.`);
-  addMessage("bot", currentText.summary);
-  addMessage("bot", obstacleText.summary);
-  addMessage("bot", adviceText.summary);
+  addMessage("bot", `카테고리: ${pendingCategory} / 필터: ${filterEl.options[filterEl.selectedIndex].text}`);
+  addMessage("bot", formatCardDetail(current.card, "1) 현재", current.direction));
+  addMessage("bot", formatCardDetail(obstacle.card, "2) 장애물", obstacle.direction));
+  addMessage("bot", formatCardDetail(advice.card, "3) 조언", advice.direction));
 
-  const tags = getTopTags(cards);
-  const picks = recommendNovelRings(tags);
+  const tags = getTopTags(selectedCards, pendingCategory);
+  const picks = recommendNovelRings(tags, pendingCategory, pendingFilter);
 
   if (!picks.length) {
-    addMessage("bot", `오늘의 키워드: ${tags.join(", ")}\n아직 매칭 데이터가 부족해요.`);
+    addMessage("bot", `오늘의 키워드: ${tags.join(", ")}\n현재 필터 조건에 맞는 소설링이 부족해요.`);
   } else {
-    const lines = picks.map(
-      (item, idx) =>
-        `${idx + 1}. ${item.title}\n- 무드: ${item.tags.join(", ")}\n- 추천 이유: ${item.reason}\n- 링크: ${item.link}`
-    );
+    const lines = picks.map((item, idx) => {
+      const reasons = [`태그 일치: ${item.matchedTags.join(", ") || "없음"}`];
+      if (item.categoryMatch) reasons.push("카테고리 일치(+1)");
+      if (pendingFilter !== "all" && item.filterMatch) reasons.push("필터 일치(+0.5)");
+
+      return `${idx + 1}. ${item.title}\n- 무드: ${item.tags.join(", ")}\n- 추천 이유: ${item.reason}\n- 매칭 근거: ${reasons.join(" / ")}\n- 링크: ${item.link}`;
+    });
     addMessage("bot", `오늘의 감정 키워드: ${tags.join(", ")}\n추천 소설링:\n\n${lines.join("\n\n")}`);
   }
 
   saveSession({
     question: pendingQuestion,
-    cards: cards.map((card) => card.nameKo),
+    category: pendingCategory,
+    filter: pendingFilter,
+    cards: selectedCards.map((item) => ({ name: item.card.nameKo, direction: item.direction })),
     tags,
     createdAt: new Date().toISOString()
   });
@@ -258,24 +330,30 @@ function runReading() {
 function handleCardPick(cardId) {
   if (stage !== "pick") return;
 
-  const idx = selectedCardIds.indexOf(cardId);
+  const idx = selectedCardStates.findIndex((item) => item.id === cardId);
   if (idx >= 0) {
-    selectedCardIds.splice(idx, 1);
-  } else if (selectedCardIds.length < 3) {
-    selectedCardIds.push(cardId);
+    selectedCardStates.splice(idx, 1);
+  } else if (selectedCardStates.length < 3) {
+    selectedCardStates.push({ id: cardId, direction: "upright" });
   }
 
   updatePickerStatus();
   syncCardButtons();
+  renderDirectionPanel();
+}
 
-  if (selectedCardIds.length === 3) {
-    setTimeout(runReading, 250);
-  }
+function setCardDirection(cardId, direction) {
+  const target = selectedCardStates.find((item) => item.id === cardId);
+  if (!target) return;
+  target.direction = direction;
+  syncCardButtons();
+  renderDirectionPanel();
 }
 
 function showIntro() {
   addMessage("bot", "안녕하세요. 타로 상담을 시작할게요.");
-  addMessage("bot", "먼저 질문을 한 문장으로 보내주세요. 그 다음 45장 중 3장을 직접 고르게 됩니다.");
+  addMessage("bot", "질문 카테고리와 추천 필터를 고른 뒤 질문을 보내주세요.");
+  addMessage("bot", "카드 3장 선택 후 정방향/역방향을 직접 선택해 해석할 수 있어요.");
   setInputState(true, "질문을 입력해주세요");
 }
 
@@ -286,7 +364,10 @@ formEl.addEventListener("submit", (event) => {
   const text = inputEl.value.trim();
   if (!text) return;
 
-  addMessage("user", text);
+  pendingCategory = categoryEl.value;
+  pendingFilter = filterEl.value;
+
+  addMessage("user", `[${pendingCategory}] ${text}`);
   inputEl.value = "";
   pendingQuestion = text;
   openPicker();
@@ -300,6 +381,24 @@ cardGridEl.addEventListener("click", (event) => {
   handleCardPick(Number(button.dataset.cardId));
 });
 
+directionPanelEl.addEventListener("click", (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLElement)) return;
+
+  const button = target.closest("button");
+  if (!button) return;
+
+  const action = button.dataset.action;
+  if (action === "direction") {
+    setCardDirection(Number(button.dataset.id), button.dataset.value);
+    return;
+  }
+
+  if (action === "start-reading" && selectedCardStates.length === 3) {
+    runReading();
+  }
+});
+
 async function init() {
   setInputState(false, "데이터 로딩 중...");
 
@@ -307,6 +406,7 @@ async function init() {
     await Promise.all([loadNovelRings(), loadTarotDeck()]);
     renderCardGrid();
     updatePickerStatus();
+    renderDirectionPanel();
     showIntro();
   } catch (error) {
     addMessage("bot", "초기화 중 문제가 발생했어요. 데이터 파일을 확인해주세요.");

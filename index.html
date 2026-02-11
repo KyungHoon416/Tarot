@@ -30,9 +30,31 @@
           <p id="picker-status" class="picker-status">0 / 3 선택됨</p>
         </div>
         <div id="card-grid" class="card-grid"></div>
+        <div id="direction-panel" class="direction-panel"></div>
       </section>
 
       <form id="input-form" class="input-form">
+        <div class="query-controls">
+          <label class="control-item">
+            <span>질문 카테고리</span>
+            <select id="question-category">
+              <option value="연애">연애</option>
+              <option value="진로">진로</option>
+              <option value="금전">금전</option>
+              <option value="인간관계">인간관계</option>
+              <option value="전체">전체</option>
+            </select>
+          </label>
+          <label class="control-item">
+            <span>추천 필터</span>
+            <select id="recommend-filter">
+              <option value="all">전체</option>
+              <option value="short">짧은 글</option>
+              <option value="happy">해피엔딩</option>
+              <option value="romance">로맨스 강함</option>
+            </select>
+          </label>
+        </div>
         <label for="user-input" class="sr-only">질문 입력</label>
         <input
           id="user-input"

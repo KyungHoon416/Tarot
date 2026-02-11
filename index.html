@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>타로 소설링 챗봇</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="bg-orb bg-orb-a"></div>
+    <div class="bg-orb bg-orb-b"></div>
+    <main class="app-shell">
+      <header class="app-header">
+        <p class="eyebrow">Tarot x Novel Ring</p>
+        <h1>오늘의 타로 상담</h1>
+        <p class="subtext">질문을 입력하면 3장의 카드로 읽고, 감정에 맞는 소설링을 추천해드려요.</p>
+      </header>
+
+      <section id="chat" class="chat-window" aria-live="polite"></section>
+
+      <section id="card-picker" class="card-picker" aria-label="타로 카드 선택 영역">
+        <div class="picker-head">
+          <p class="picker-title">카드 45장 중 3장을 골라주세요</p>
+          <p id="picker-status" class="picker-status">0 / 3 선택됨</p>
+        </div>
+        <div id="card-grid" class="card-grid"></div>
+      </section>
+
+      <form id="input-form" class="input-form">
+        <label for="user-input" class="sr-only">질문 입력</label>
+        <input
+          id="user-input"
+          type="text"
+          maxlength="140"
+          placeholder="예: 지금 이 관계, 계속 가도 될까?"
+          autocomplete="off"
+        />
+        <button id="send-btn" type="submit">보내기</button>
+      </form>
+    </main>
+
+    <template id="message-template">
+      <article class="message">
+        <p class="bubble"></p>
+      </article>
+    </template>
+
+    <script src="app.js" type="module"></script>
+  </body>
+</html>

@@ -1,0 +1,37 @@
+[
+  {
+    "id": "ring-01",
+    "title": "새벽의 문장",
+    "tags": ["사색", "회복", "치유"],
+    "reason": "혼란한 마음을 천천히 정리해주는 잔잔한 서사",
+    "link": "https://example.com/rings/dawn-lines"
+  },
+  {
+    "id": "ring-02",
+    "title": "유리 온실의 계절",
+    "tags": ["로맨스", "설렘", "성장"],
+    "reason": "관계의 떨림과 감정 성장을 함께 따라가는 이야기",
+    "link": "https://example.com/rings/glass-season"
+  },
+  {
+    "id": "ring-03",
+    "title": "파도 끝의 지도",
+    "tags": ["도전", "변화", "희망"],
+    "reason": "낯선 선택의 순간을 밀도 있게 풀어낸 전환형 스토리",
+    "link": "https://example.com/rings/wave-map"
+  },
+  {
+    "id": "ring-04",
+    "title": "밤을 건너는 연습",
+    "tags": ["불안", "정리", "회복"],
+    "reason": "불안을 통과해 내 삶의 리듬을 되찾는 인물 중심 서사",
+    "link": "https://example.com/rings/crossing-night"
+  },
+  {
+    "id": "ring-05",
+    "title": "두 번째 행성의 약속",
+    "tags": ["연결", "결단", "변화"],
+    "reason": "관계와 선택의 갈림길에서 몰입감 있게 전개되는 작품",
+    "link": "https://example.com/rings/second-planet"
+  }
+]

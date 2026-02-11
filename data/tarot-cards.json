@@ -1,0 +1,546 @@
+{
+  "version": "1.0.0",
+  "total_cards": 45,
+  "cards": [
+    {
+      "id": 0,
+      "name_ko": "광대",
+      "name_en": "The Fool",
+      "arcana": "Major",
+      "suit": "Major",
+      "keywords": ["시작", "자유", "순수", "모험"],
+      "interpretation": {
+        "upright": "새로운 시작, 무한한 가능성, 자유로운 영혼, 낙천적인 태도",
+        "reversed": "무모함, 부주의, 결정 장애, 현실 도피, 어리석은 선택"
+      }
+    },
+    {
+      "id": 1,
+      "name_ko": "마법사",
+      "name_en": "The Magician",
+      "arcana": "Major",
+      "suit": "Major",
+      "keywords": ["창조", "능력", "실행력", "도구"],
+      "interpretation": {
+        "upright": "잠재력 발휘, 숙련된 기술, 창의적 에너지, 목적 달성",
+        "reversed": "속임수, 재능 낭비, 의지 부족, 계획의 차질"
+      }
+    },
+    {
+      "id": 2,
+      "name_ko": "고위 여사제",
+      "name_en": "The High Priestess",
+      "arcana": "Major",
+      "suit": "Major",
+      "keywords": ["직관", "지혜", "신비", "무의식"],
+      "interpretation": {
+        "upright": "내면의 목소리, 영적 통찰력, 비밀, 정적인 지혜",
+        "reversed": "직관 무시, 피상적인 지식, 숨겨진 의도 발견, 혼란"
+      }
+    },
+    {
+      "id": 3,
+      "name_ko": "여황제",
+      "name_en": "The Empress",
+      "arcana": "Major",
+      "suit": "Major",
+      "keywords": ["풍요", "모성", "창조", "아름다움"],
+      "interpretation": {
+        "upright": "물질적 풍요, 번영, 임신과 출산, 자연의 생명력",
+        "reversed": "정체기, 창의적 블록, 의존성, 낭비벽"
+      }
+    },
+    {
+      "id": 4,
+      "name_ko": "황제",
+      "name_en": "The Emperor",
+      "arcana": "Major",
+      "suit": "Major",
+      "keywords": ["권위", "질서", "지배", "구조"],
+      "interpretation": {
+        "upright": "리더십, 체계적인 관리, 아버지상, 강력한 의지",
+        "reversed": "독단적 태도, 지배욕, 무능력, 유연성 부족"
+      }
+    },
+    {
+      "id": 5,
+      "name_ko": "교황",
+      "name_en": "The Hierophant",
+      "arcana": "Major",
+      "suit": "Major",
+      "keywords": ["전통", "교육", "자비", "관습"],
+      "interpretation": {
+        "upright": "사회적 규범 준수, 스승의 조언, 영적인 믿음, 집단 소속",
+        "reversed": "규제 탈피, 파격적인 생각, 맹목적인 믿음, 고정관념"
+      }
+    },
+    {
+      "id": 6,
+      "name_ko": "연인",
+      "name_en": "The Lovers",
+      "arcana": "Major",
+      "suit": "Major",
+      "keywords": ["선택", "사랑", "조화", "가치관"],
+      "interpretation": {
+        "upright": "깊은 유대감, 올바른 선택, 매력적인 관계, 마음의 일치",
+        "reversed": "불화, 잘못된 선택, 관계의 단절, 자기 갈등"
+      }
+    },
+    {
+      "id": 7,
+      "name_ko": "전차",
+      "name_en": "The Chariot",
+      "arcana": "Major",
+      "suit": "Major",
+      "keywords": ["승리", "의지", "전진", "통제"],
+      "interpretation": {
+        "upright": "목표 달성, 역경 극복, 강한 추진력, 승리",
+        "reversed": "통제 불능, 방향 상실, 무리한 진행, 패배"
+      }
+    },
+    {
+      "id": 8,
+      "name_ko": "힘",
+      "name_en": "Strength",
+      "arcana": "Major",
+      "suit": "Major",
+      "keywords": ["인내", "용기", "자제력", "설득"],
+      "interpretation": {
+        "upright": "부드러운 카리스마, 내면의 힘, 갈등 치유, 인내심",
+        "reversed": "자신감 하락, 본능에 굴복, 두려움, 무기력"
+      }
+    },
+    {
+      "id": 9,
+      "name_ko": "은둔자",
+      "name_en": "The Hermit",
+      "arcana": "Major",
+      "suit": "Major",
+      "keywords": ["성찰", "탐구", "고독", "진리"],
+      "interpretation": {
+        "upright": "내면 탐색, 진지한 고민, 전문가의 조언, 신중함",
+        "reversed": "외로움, 고립, 사회적 거부, 고집불통"
+      }
+    },
+    {
+      "id": 10,
+      "name_ko": "운명의 수레바퀴",
+      "name_en": "Wheel of Fortune",
+      "arcana": "Major",
+      "suit": "Major",
+      "keywords": ["운명", "변화", "순환", "행운"],
+      "interpretation": {
+        "upright": "피할 수 없는 변화, 행운의 기회, 인생의 전환점",
+        "reversed": "불운, 저항할 수 없는 흐름, 나쁜 타이밍, 정체"
+      }
+    },
+    {
+      "id": 11,
+      "name_ko": "정의",
+      "name_en": "Justice",
+      "arcana": "Major",
+      "suit": "Major",
+      "keywords": ["공정", "균형", "책임", "결단"],
+      "interpretation": {
+        "upright": "객관적 판단, 인과응보, 승소, 공평한 거래",
+        "reversed": "편견, 불공정, 책임 회피, 법적 분쟁"
+      }
+    },
+    {
+      "id": 12,
+      "name_ko": "매달린 사람",
+      "name_en": "The Hanged Man",
+      "arcana": "Major",
+      "suit": "Major",
+      "keywords": ["희생", "정지", "새로운 시각", "인내"],
+      "interpretation": {
+        "upright": "잠시 멈춤, 가치관의 전환, 헌신적인 태도, 수용",
+        "reversed": "헛된 희생, 정체기, 변화 거부, 우유부단"
+      }
+    },
+    {
+      "id": 13,
+      "name_ko": "죽음",
+      "name_en": "Death",
+      "arcana": "Major",
+      "suit": "Major",
+      "keywords": ["종결", "이행", "전환", "재탄생"],
+      "interpretation": {
+        "upright": "과거의 끝, 근본적인 변화, 새로운 장의 시작",
+        "reversed": "변화에 대한 두려움, 미련, 억지로 버팀"
+      }
+    },
+    {
+      "id": 14,
+      "name_ko": "절제",
+      "name_en": "Temperance",
+      "arcana": "Major",
+      "suit": "Major",
+      "keywords": ["조화", "균형", "중용", "인내"],
+      "interpretation": {
+        "upright": "감정 조절, 타협과 화합, 건강한 회복, 평온",
+        "reversed": "불균형, 과잉, 소통 부재, 조급함"
+      }
+    },
+    {
+      "id": 15,
+      "name_ko": "악마",
+      "name_en": "The Devil",
+      "arcana": "Major",
+      "suit": "Major",
+      "keywords": ["속박", "중독", "유혹", "물질주의"],
+      "interpretation": {
+        "upright": "집착, 욕망의 노예, 벗어나기 힘든 상황, 유혹",
+        "reversed": "속박에서 해방, 자각, 나쁜 습관 교정, 자유"
+      }
+    },
+    {
+      "id": 16,
+      "name_ko": "탑",
+      "name_en": "The Tower",
+      "arcana": "Major",
+      "suit": "Major",
+      "keywords": ["붕괴", "충격", "해방", "격변"],
+      "interpretation": {
+        "upright": "갑작스러운 사고, 가치관의 파괴, 충격적인 소식",
+        "reversed": "재난을 피함, 지연되는 붕괴, 두려움 속에 버팀"
+      }
+    },
+    {
+      "id": 17,
+      "name_ko": "별",
+      "name_en": "The Star",
+      "arcana": "Major",
+      "suit": "Major",
+      "keywords": ["희망", "영감", "치유", "정화"],
+      "interpretation": {
+        "upright": "낙관적인 미래, 정신적 안식, 목표 달성 기미",
+        "reversed": "실망, 영감 상실, 비관적인 태도, 기회 놓침"
+      }
+    },
+    {
+      "id": 18,
+      "name_ko": "달",
+      "name_en": "The Moon",
+      "arcana": "Major",
+      "suit": "Major",
+      "keywords": ["불안", "혼란", "잠재의식", "환상"],
+      "interpretation": {
+        "upright": "모호한 상황, 보이지 않는 적, 변덕스러운 감정",
+        "reversed": "불안 해소, 진실의 발견, 오해 풀림, 직시"
+      }
+    },
+    {
+      "id": 19,
+      "name_ko": "태양",
+      "name_en": "The Sun",
+      "arcana": "Major",
+      "suit": "Major",
+      "keywords": ["성공", "기쁨", "활력", "명료함"],
+      "interpretation": {
+        "upright": "최고의 행운, 긍정적인 에너지, 성취, 밝은 미래",
+        "reversed": "일시적인 지연, 과한 자신감, 약간의 우울감"
+      }
+    },
+    {
+      "id": 20,
+      "name_ko": "심판",
+      "name_en": "Judgement",
+      "arcana": "Major",
+      "suit": "Major",
+      "keywords": ["부활", "결정", "소식", "보상"],
+      "interpretation": {
+        "upright": "중요한 결단의 시기, 재회, 과거의 청산, 승인",
+        "reversed": "결정 연기, 자책감, 과거에 얽매임, 불리한 소식"
+      }
+    },
+    {
+      "id": 21,
+      "name_ko": "세계",
+      "name_en": "The World",
+      "arcana": "Major",
+      "suit": "Major",
+      "keywords": ["완성", "성공", "여행", "통합"],
+      "interpretation": {
+        "upright": "완벽한 마무리, 목표 달성, 글로벌한 성공, 조화",
+        "reversed": "미완성, 지체됨, 서투른 끝맺음, 한계에 부딪힘"
+      }
+    },
+    {
+      "id": 22,
+      "name_ko": "지팡이 에이스",
+      "name_en": "Ace of Wands",
+      "arcana": "Minor",
+      "suit": "Wands",
+      "keywords": ["열정", "기회", "의지", "창의성"],
+      "interpretation": {
+        "upright": "새로운 프로젝트, 영감의 탄생, 모험의 시작",
+        "reversed": "의욕 저하, 계획 취소, 성급한 시작, 중단"
+      }
+    },
+    {
+      "id": 23,
+      "name_ko": "지팡이 3",
+      "name_en": "Three of Wands",
+      "arcana": "Minor",
+      "suit": "Wands",
+      "keywords": ["확장", "전망", "협력", "무역"],
+      "interpretation": {
+        "upright": "성공적인 기반, 더 넓은 세계로 진출, 비즈니스 확장",
+        "reversed": "발전 없음, 안목 부족, 협력의 실패, 지연"
+      }
+    },
+    {
+      "id": 24,
+      "name_ko": "지팡이 8",
+      "name_en": "Eight of Wands",
+      "arcana": "Minor",
+      "suit": "Wands",
+      "keywords": ["속도", "급진전", "소식", "여행"],
+      "interpretation": {
+        "upright": "빠른 소식, 일의 급진전, 항공 여행, 장애물 제거",
+        "reversed": "진행 지연, 혼란스러운 소통, 성급한 행동"
+      }
+    },
+    {
+      "id": 25,
+      "name_ko": "지팡이 10",
+      "name_en": "Ten of Wands",
+      "arcana": "Minor",
+      "suit": "Wands",
+      "keywords": ["책임", "압박", "과로", "완수"],
+      "interpretation": {
+        "upright": "과도한 부담, 혼자 짊어진 짐, 목표 직전의 힘겨움",
+        "reversed": "책임 회피, 번아웃, 짐을 내려놓음, 고통 해소"
+      }
+    },
+    {
+      "id": 26,
+      "name_ko": "지팡이 기사",
+      "name_en": "Knight of Wands",
+      "arcana": "Minor",
+      "suit": "Wands",
+      "keywords": ["도전", "충동", "이동", "열정"],
+      "interpretation": {
+        "upright": "에너지 넘치는 도전, 급격한 변화, 추진력 있는 인물",
+        "reversed": "성급함, 분노 조절 장애, 무모한 행동, 중단"
+      }
+    },
+    {
+      "id": 27,
+      "name_ko": "지팡이 여왕",
+      "name_en": "Queen of Wands",
+      "arcana": "Minor",
+      "suit": "Wands",
+      "keywords": ["자신감", "매력", "사교적", "독립심"],
+      "interpretation": {
+        "upright": "활기찬 리더십, 따뜻한 마음, 매혹적인 여성",
+        "reversed": "질투, 고집, 변덕, 타인에 대한 비난"
+      }
+    },
+    {
+      "id": 28,
+      "name_ko": "컵 에이스",
+      "name_en": "Ace of Cups",
+      "arcana": "Minor",
+      "suit": "Cups",
+      "keywords": ["사랑", "감정", "직관", "새로운 관계"],
+      "interpretation": {
+        "upright": "새로운 사랑의 시작, 정서적 충만, 기쁨, 평화",
+        "reversed": "감정 소모, 짝사랑, 공허함, 정서적 불안"
+      }
+    },
+    {
+      "id": 29,
+      "name_ko": "컵 2",
+      "name_en": "Two of Cups",
+      "arcana": "Minor",
+      "suit": "Cups",
+      "keywords": ["결합", "우정", "파트너십", "화합"],
+      "interpretation": {
+        "upright": "마음이 잘 맞음, 고백 성공, 비즈니스 계약 성사",
+        "reversed": "불화, 관계 단절, 일방적인 소통, 배신"
+      }
+    },
+    {
+      "id": 30,
+      "name_ko": "컵 5",
+      "name_en": "Five of Cups",
+      "arcana": "Minor",
+      "suit": "Cups",
+      "keywords": ["상실", "후회", "비탄", "실망"],
+      "interpretation": {
+        "upright": "과거에 대한 미련, 슬픔에 잠김, 상실감",
+        "reversed": "희망 발견, 상처 치유, 수용, 새로운 시작"
+      }
+    },
+    {
+      "id": 31,
+      "name_ko": "컵 10",
+      "name_en": "Ten of Cups",
+      "arcana": "Minor",
+      "suit": "Cups",
+      "keywords": ["행복", "가족", "안정", "정서적 만족"],
+      "interpretation": {
+        "upright": "완벽한 조화, 가정의 평화, 정서적인 풍요",
+        "reversed": "가족 갈등, 소외감, 깨진 평화, 가식적인 행복"
+      }
+    },
+    {
+      "id": 32,
+      "name_ko": "컵 소년",
+      "name_en": "Page of Cups",
+      "arcana": "Minor",
+      "suit": "Cups",
+      "keywords": ["감수성", "소식", "예술", "순수함"],
+      "interpretation": {
+        "upright": "기분 좋은 소식, 감정적 접근, 예술적 영감",
+        "reversed": "감정 과잉, 유혹에 빠짐, 미성숙한 태도"
+      }
+    },
+    {
+      "id": 33,
+      "name_ko": "컵 왕",
+      "name_en": "King of Cups",
+      "arcana": "Minor",
+      "suit": "Cups",
+      "keywords": ["포용력", "자애", "차분함", "상담"],
+      "interpretation": {
+        "upright": "감정을 다스리는 지혜, 너그러운 조언자, 정서적 안정",
+        "reversed": "감정 기복, 가스라이팅, 편파적인 태도, 불안정"
+      }
+    },
+    {
+      "id": 34,
+      "name_ko": "검 에이스",
+      "name_en": "Ace of Swords",
+      "arcana": "Minor",
+      "suit": "Swords",
+      "keywords": ["결단", "돌파", "정의", "지성"],
+      "interpretation": {
+        "upright": "명확한 판단, 정신적 승리, 어려운 문제의 해결",
+        "reversed": "혼란, 잘못된 판단, 갈등의 심화, 무력함"
+      }
+    },
+    {
+      "id": 35,
+      "name_ko": "검 3",
+      "name_en": "Three of Swords",
+      "arcana": "Minor",
+      "suit": "Swords",
+      "keywords": ["상처", "이별", "비탄", "거절"],
+      "interpretation": {
+        "upright": "마음 아픈 소식, 배신, 정신적 고통, 삼각관계",
+        "reversed": "치유의 시작, 용서, 슬픔의 해소, 상황 호전"
+      }
+    },
+    {
+      "id": 36,
+      "name_ko": "검 8",
+      "name_en": "Eight of Swords",
+      "arcana": "Minor",
+      "suit": "Swords",
+      "keywords": ["고립", "속박", "무력감", "진퇴양난"],
+      "interpretation": {
+        "upright": "스스로를 가둔 감옥, 나아갈 수 없는 상황, 비관",
+        "reversed": "자유를 찾음, 자각, 장애물 제거, 해결책 발견"
+      }
+    },
+    {
+      "id": 37,
+      "name_ko": "검 9",
+      "name_en": "Nine of Swords",
+      "arcana": "Minor",
+      "suit": "Swords",
+      "keywords": ["불안", "불면증", "악몽", "죄책감"],
+      "interpretation": {
+        "upright": "심한 스트레스, 걱정으로 잠 못 이룸, 정신적 압박",
+        "reversed": "공포에서 벗어남, 도움의 손길, 점진적 회복"
+      }
+    },
+    {
+      "id": 38,
+      "name_ko": "검 10",
+      "name_en": "Ten of Swords",
+      "arcana": "Minor",
+      "suit": "Swords",
+      "keywords": ["파멸", "한계", "희생", "끝"],
+      "interpretation": {
+        "upright": "완전한 끝, 최악의 상황, 배신, 더 이상 나빠질 수 없음",
+        "reversed": "회생의 기회, 고통의 끝, 겨우 살아남음"
+      }
+    },
+    {
+      "id": 39,
+      "name_ko": "검 왕",
+      "name_en": "King of Swords",
+      "arcana": "Minor",
+      "suit": "Swords",
+      "keywords": ["냉철함", "권위", "전문성", "공정"],
+      "interpretation": {
+        "upright": "합리적 판단, 전문가적 조언, 엄격한 질서 준수",
+        "reversed": "독선, 냉혹함, 언어폭력, 불공정한 판단"
+      }
+    },
+    {
+      "id": 40,
+      "name_ko": "펜타클 에이스",
+      "name_en": "Ace of Pentacles",
+      "arcana": "Minor",
+      "suit": "Pentacles",
+      "keywords": ["재물", "번영", "실질적 기회", "안정"],
+      "interpretation": {
+        "upright": "금전적 이득, 새로운 사업 기회, 실질적인 성과",
+        "reversed": "금전적 손실, 기회 놓침, 비현실적 계획, 탐욕"
+      }
+    },
+    {
+      "id": 41,
+      "name_ko": "펜타클 4",
+      "name_en": "Four of Pentacles",
+      "arcana": "Minor",
+      "suit": "Pentacles",
+      "keywords": ["소유", "안정", "인색", "보수적"],
+      "interpretation": {
+        "upright": "재산 유지, 변화 거부, 인색함, 안정적인 상태",
+        "reversed": "지출 발생, 개방적인 태도, 소유물 상실, 불안정"
+      }
+    },
+    {
+      "id": 42,
+      "name_ko": "펜타클 8",
+      "name_en": "Eight of Pentacles",
+      "arcana": "Minor",
+      "suit": "Pentacles",
+      "keywords": ["장인정신", "성실", "기술 연마", "노력"],
+      "interpretation": {
+        "upright": "꾸준한 노력, 기술 습득, 디테일에 집중, 전문성 향상",
+        "reversed": "나태함, 기술 부족, 단기적 성과에 급급함, 부주의"
+      }
+    },
+    {
+      "id": 43,
+      "name_ko": "펜타클 10",
+      "name_en": "Ten of Pentacles",
+      "arcana": "Minor",
+      "suit": "Pentacles",
+      "keywords": ["유산", "가문", "부유함", "장기적 안정"],
+      "interpretation": {
+        "upright": "막대한 부, 가족의 번영, 상속, 전통적인 가치",
+        "reversed": "금전적 갈등, 가산 탕진, 불안정한 기반, 불화"
+      }
+    },
+    {
+      "id": 44,
+      "name_ko": "펜타클 여왕",
+      "name_en": "Queen of Pentacles",
+      "arcana": "Minor",
+      "suit": "Pentacles",
+      "keywords": ["풍요", "양육", "실질적 도움", "안정"],
+      "interpretation": {
+        "upright": "현명한 자금 관리, 헌신적인 태도, 물질적 풍요",
+        "reversed": "낭비, 자기관리 소홀, 물질적 집착, 질투심"
+      }
+    }
+  ]
+}

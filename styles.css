@@ -177,36 +177,93 @@ h1 {
 .card-grid {
   display: grid;
   grid-template-columns: repeat(9, minmax(0, 1fr));
-  gap: 8px;
+  gap: 10px;
 }
 
 .tarot-card-btn {
-  border: 1px solid rgba(35, 28, 20, 0.16);
-  border-radius: 10px;
-  background: linear-gradient(150deg, #2d261e, #43372a);
+  position: relative;
+  border: 1px solid rgba(35, 28, 20, 0.2);
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 25% 20%, rgba(255, 255, 255, 0.16), transparent 45%),
+    radial-gradient(circle at 85% 85%, rgba(255, 214, 160, 0.1), transparent 45%),
+    linear-gradient(145deg, #2b2436 0%, #16111d 100%);
   color: #f8f0e3;
-  min-height: 48px;
+  min-height: 84px;
   font-family: "Space Grotesk", sans-serif;
   font-weight: 700;
-  font-size: 0.92rem;
+  font-size: 0.86rem;
   cursor: pointer;
-  transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    filter 160ms ease;
+  overflow: hidden;
+}
+
+.tarot-card-btn::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 230, 189, 0.3);
+  pointer-events: none;
+}
+
+.card-frame {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 84px;
+}
+
+.card-sigil {
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  color: #f6d8a2;
+  text-shadow: 0 0 8px rgba(246, 216, 162, 0.4);
+}
+
+.card-corner {
+  position: absolute;
+  left: 8px;
+  font-size: 0.66rem;
+  color: rgba(255, 237, 205, 0.9);
+  font-weight: 700;
+}
+
+.card-corner-top {
+  top: 8px;
+}
+
+.card-corner-bottom {
+  bottom: 8px;
+  transform: rotate(180deg);
 }
 
 .tarot-card-btn:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+  box-shadow: 0 8px 16px rgba(16, 12, 20, 0.36);
 }
 
 .tarot-card-btn.selected {
-  border-color: rgba(211, 111, 69, 0.8);
-  box-shadow: 0 0 0 2px rgba(211, 111, 69, 0.25) inset;
-  background: linear-gradient(150deg, #6b391f, #b34b1f);
+  border-color: rgba(255, 192, 132, 0.92);
+  box-shadow:
+    0 0 0 2px rgba(255, 177, 96, 0.28),
+    0 8px 18px rgba(53, 25, 77, 0.34);
+  background:
+    radial-gradient(circle at 25% 20%, rgba(255, 255, 255, 0.2), transparent 45%),
+    radial-gradient(circle at 85% 85%, rgba(255, 214, 160, 0.16), transparent 45%),
+    linear-gradient(145deg, #5a3455 0%, #201528 100%);
 }
 
 .tarot-card-btn:disabled {
-  opacity: 0.42;
+  opacity: 0.36;
   cursor: not-allowed;
   transform: none;
+  filter: grayscale(0.2);
 }
 
 .input-form input {
@@ -344,9 +401,12 @@ h1 {
   }
 
   .tarot-card-btn {
-    min-height: 44px;
-    font-size: 0.82rem;
+    min-height: 74px;
     border-radius: 8px;
+  }
+
+  .card-frame {
+    min-height: 74px;
   }
 
   .input-form {

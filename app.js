@@ -174,6 +174,7 @@ async function loadTarotDeck() {
       arcana: card.arcana,
       suit: card.suit,
       keywords: card.keywords || [],
+      cardDescription: card.card_description || "",
       interpretation: card.interpretation || { upright: "", reversed: "" },
       guidance: card.guidance || {},
       deepInterpretation: card.deep_interpretation || null,
@@ -389,9 +390,13 @@ function formatCardDetail(card, positionLabel, direction, category) {
   const deepSummary = section?.summary;
   const deepCategory = section?.[detailKey];
   const deepHealth = section?.health;
+  const cardDescription =
+    card.cardDescription ||
+    `${card.nameKo} 카드는 ${card.keywords.slice(0, 2).join("·")} 키워드를 중심으로 읽는 해석 카드입니다.`;
 
   const parts = [
     `${positionLabel}: ${card.nameKo} (${card.name})`,
+    `- 카드 설명: ${cardDescription}`,
     `- 키워드: ${card.keywords.join(", ")}`,
     `- ${directionLabel} 기본 해석: ${detailText}`
   ];

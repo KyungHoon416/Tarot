@@ -176,6 +176,7 @@ async function loadTarotDeck() {
       keywords: card.keywords || [],
       interpretation: card.interpretation || { upright: "", reversed: "" },
       guidance: card.guidance || {},
+      deepInterpretation: card.deep_interpretation || null,
       tags: mapCardToTags(card)
     }))
     .sort((a, b) => a.id - b.id);
@@ -371,12 +372,44 @@ function renderDirectionPanel() {
   `;
 }
 
+function resolveCategoryDetailKey(category) {
+  if (category === "연애") return "love";
+  if (category === "진로") return "career";
+  if (category === "금전") return "money";
+  if (category === "인간관계") return "love";
+  return "summary";
+}
+
 function formatCardDetail(card, positionLabel, direction, category) {
   const directionLabel = direction === "upright" ? "정방향" : "역방향";
   const detailText = direction === "upright" ? card.interpretation.upright : card.interpretation.reversed;
   const guidance = card.guidance?.[category] || "현재 질문 맥락에서 핵심 키워드를 기준으로 신중하게 선택하세요.";
+  const section = card.deepInterpretation?.[direction];
+  const detailKey = resolveCategoryDetailKey(category);
+  const deepSummary = section?.summary;
+  const deepCategory = section?.[detailKey];
+  const deepHealth = section?.health;
 
-  return `${positionLabel}: ${card.nameKo} (${card.name})\n- 키워드: ${card.keywords.join(", ")}\n- ${directionLabel} 해석: ${detailText}\n- ${category} 조언: ${guidance}`;
+  const parts = [
+    `${positionLabel}: ${card.nameKo} (${card.name})`,
+    `- 키워드: ${card.keywords.join(", ")}`,
+    `- ${directionLabel} 기본 해석: ${detailText}`
+  ];
+
+  if (deepSummary) {
+    parts.push(`- ${directionLabel} 핵심 요약: ${deepSummary}`);
+  }
+
+  if (deepCategory) {
+    parts.push(`- ${category} 상세 해석: ${deepCategory}`);
+  }
+
+  if (deepHealth && category !== "전체") {
+    parts.push(`- 건강 참고: ${deepHealth}`);
+  }
+
+  parts.push(`- ${category} 조언: ${guidance}`);
+  return parts.join("\n");
 }
 
 function runReading() {

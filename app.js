@@ -11,6 +11,7 @@ const categoryEl = document.querySelector("#question-category");
 const filterEl = document.querySelector("#recommend-filter");
 
 const tarotSymbols = ["✦", "☾", "✶", "✷", "☉", "⚝", "✺", "◇"];
+const cardImageExtensions = ["jpg", "png", "webp", "jpeg", "JPG", "PNG", "WEBP", "JPEG"];
 const suitSymbols = {
   Major: "✶",
   Wands: "⚚",
@@ -174,6 +175,7 @@ async function loadTarotDeck() {
       suit: card.suit,
       keywords: card.keywords || [],
       interpretation: card.interpretation || { upright: "", reversed: "" },
+      guidance: card.guidance || {},
       tags: mapCardToTags(card)
     }))
     .sort((a, b) => a.id - b.id);
@@ -206,7 +208,7 @@ function resetPicker() {
 function openPicker() {
   stage = "pick";
   cardPickerEl.classList.add("active");
-  addMessage("bot", "좋아요. 카드 3장을 고르고, 각 카드의 정방향/역방향을 직접 선택한 뒤 해석을 시작해주세요.");
+  addMessage("bot", `좋아요. 카드 ${tarotDeck.length}장 중 3장을 고르고, 각 카드의 정방향/역방향을 직접 선택한 뒤 해석을 시작해주세요.`);
   setInputState(false, "카드 선택 중...");
   resetPicker();
 }
@@ -242,6 +244,86 @@ function renderCardGrid() {
   cardGridEl.appendChild(fragment);
 }
 
+function getMajorNameAliases(nameKo) {
+  const aliases = new Set([nameKo]);
+  const map = {
+    "광대": ["바보"],
+    "고위 여사제": ["여사제"],
+    "매달린 사람": ["행맨"],
+    "은둔자": ["은둔자"],
+    "정의": ["정의"],
+    "운명의 수레바퀴": ["운명의 수레바퀴"],
+    "악마": ["악마"],
+    "탑": ["타워"]
+  };
+  (map[nameKo] || []).forEach((item) => aliases.add(item));
+  return [...aliases];
+}
+
+function getMinorImageStem(card) {
+  const suitMap = {
+    Wands: "완드",
+    Cups: "컵",
+    Swords: "소드",
+    Pentacles: "펜타클"
+  };
+  const suitStem = suitMap[card.suit];
+  if (!suitStem) return [];
+
+  const normalized = card.nameKo.replace(/^(지팡이|완드|컵|검|소드|펜타클)\s*/, "");
+  const rankMap = {
+    소년: "페이지",
+    페이지: "페이지",
+    기사: "나이트",
+    나이트: "나이트",
+    여왕: "퀸",
+    퀸: "퀸",
+    왕: "킹",
+    킹: "킹"
+  };
+  const rankToken = rankMap[normalized] || normalized;
+  const stems = [`./image/${suitStem} ${rankToken}`];
+
+  if (/^\d+$/.test(rankToken)) {
+    stems.push(`./image/${suitStem}${rankToken}`);
+  }
+
+  return stems;
+}
+
+function buildCardImageCandidates(card) {
+  const displayNo = card.id + 1;
+  const baseNames = [
+    `./assets/cards/${displayNo}`,
+    `./assets/cards/${String(displayNo).padStart(2, "0")}`,
+    `./assets/cards/${card.id}`,
+    `./assets/cards/${String(card.id).padStart(2, "0")}`,
+    `./image/${displayNo}`,
+    `./image/${card.id}`
+  ];
+
+  if (card.arcana === "Major") {
+    const aliases = getMajorNameAliases(card.nameKo);
+    aliases.forEach((alias) => {
+      baseNames.push(`./image/${card.id}. ${alias} 카드`);
+      baseNames.push(`./image/${card.id}. ${alias}`);
+      baseNames.push(`./image/${displayNo}. ${alias} 카드`);
+      baseNames.push(`./image/${displayNo}. ${alias}`);
+    });
+  } else {
+    baseNames.push(...getMinorImageStem(card));
+  }
+
+  const result = [];
+  baseNames.forEach((base) => {
+    cardImageExtensions.forEach((ext) => {
+      result.push(`${base}.${ext}`);
+    });
+  });
+
+  return [...new Set(result)];
+}
+
 function renderDirectionPanel() {
   if (!selectedCardStates.length) {
     directionPanelEl.innerHTML = '<p class="direction-help">카드를 먼저 선택해주세요.</p>';
@@ -252,9 +334,28 @@ function renderDirectionPanel() {
     .map((state, idx) => {
       const card = tarotDeck.find((item) => item.id === state.id);
       if (!card) return "";
+      const displayNo = card.id + 1;
+      const candidates = buildCardImageCandidates(card);
+      const defaultSrc = candidates[0];
       return `
         <div class="direction-item">
-          <div class="direction-name">${idx + 1}. ${card.nameKo}</div>
+          <div class="direction-meta">
+            <div class="card-thumb" data-thumb>
+              <img
+                class="card-thumb-image"
+                src="${defaultSrc}"
+                alt="${card.nameKo} 카드 이미지"
+                loading="lazy"
+                data-candidates='${JSON.stringify(candidates)}'
+                data-candidate-index="0"
+              />
+              <div class="card-thumb-fallback" aria-hidden="true">
+                <span class="card-thumb-no">${displayNo}</span>
+                <span class="card-thumb-sigil">${suitSymbols[card.suit] || tarotSymbols[card.id % tarotSymbols.length]}</span>
+              </div>
+            </div>
+            <div class="direction-name">${idx + 1}. ${card.nameKo}</div>
+          </div>
           <div class="direction-toggle">
             <button class="dir-btn ${state.direction === "upright" ? "active" : ""}" data-action="direction" data-id="${state.id}" data-value="upright">정방향</button>
             <button class="dir-btn ${state.direction === "reversed" ? "active" : ""}" data-action="direction" data-id="${state.id}" data-value="reversed">역방향</button>
@@ -270,11 +371,12 @@ function renderDirectionPanel() {
   `;
 }
 
-function formatCardDetail(card, positionLabel, direction) {
+function formatCardDetail(card, positionLabel, direction, category) {
   const directionLabel = direction === "upright" ? "정방향" : "역방향";
   const detailText = direction === "upright" ? card.interpretation.upright : card.interpretation.reversed;
+  const guidance = card.guidance?.[category] || "현재 질문 맥락에서 핵심 키워드를 기준으로 신중하게 선택하세요.";
 
-  return `${positionLabel}: ${card.nameKo} (${card.name})\n- 키워드: ${card.keywords.join(", ")}\n- ${directionLabel} 해석: ${detailText}`;
+  return `${positionLabel}: ${card.nameKo} (${card.name})\n- 키워드: ${card.keywords.join(", ")}\n- ${directionLabel} 해석: ${detailText}\n- ${category} 조언: ${guidance}`;
 }
 
 function runReading() {
@@ -291,9 +393,9 @@ function runReading() {
 
   addMessage("bot", `질문 \"${pendingQuestion}\" 에 대한 리딩을 시작할게요.`);
   addMessage("bot", `카테고리: ${pendingCategory} / 필터: ${filterEl.options[filterEl.selectedIndex].text}`);
-  addMessage("bot", formatCardDetail(current.card, "1) 현재", current.direction));
-  addMessage("bot", formatCardDetail(obstacle.card, "2) 장애물", obstacle.direction));
-  addMessage("bot", formatCardDetail(advice.card, "3) 조언", advice.direction));
+  addMessage("bot", formatCardDetail(current.card, "1) 현재", current.direction, pendingCategory));
+  addMessage("bot", formatCardDetail(obstacle.card, "2) 장애물", obstacle.direction, pendingCategory));
+  addMessage("bot", formatCardDetail(advice.card, "3) 조언", advice.direction, pendingCategory));
 
   const tags = getTopTags(selectedCards, pendingCategory);
   const picks = recommendNovelRings(tags, pendingCategory, pendingFilter);
@@ -353,7 +455,7 @@ function setCardDirection(cardId, direction) {
 function showIntro() {
   addMessage("bot", "안녕하세요. 타로 상담을 시작할게요.");
   addMessage("bot", "질문 카테고리와 추천 필터를 고른 뒤 질문을 보내주세요.");
-  addMessage("bot", "카드 3장 선택 후 정방향/역방향을 직접 선택해 해석할 수 있어요.");
+  addMessage("bot", `카드 ${tarotDeck.length}장 중 3장 선택 후 정방향/역방향을 직접 선택해 해석할 수 있어요.`);
   setInputState(true, "질문을 입력해주세요");
 }
 
@@ -398,6 +500,30 @@ directionPanelEl.addEventListener("click", (event) => {
     runReading();
   }
 });
+
+directionPanelEl.addEventListener(
+  "error",
+  (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLImageElement)) return;
+    if (!target.classList.contains("card-thumb-image")) return;
+
+    const currentIndex = Number(target.dataset.candidateIndex || "0");
+    const nextIndex = currentIndex + 1;
+    const candidates = JSON.parse(target.dataset.candidates || "[]");
+
+    if (nextIndex < candidates.length) {
+      target.dataset.candidateIndex = String(nextIndex);
+      target.src = candidates[nextIndex];
+      return;
+    }
+
+    const holder = target.closest("[data-thumb]");
+    if (holder) holder.classList.add("fallback");
+    target.remove();
+  },
+  true
+);
 
 async function init() {
   setInputState(false, "데이터 로딩 중...");

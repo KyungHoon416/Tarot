@@ -32,6 +32,8 @@ jobs:
           cp app.js dist/app.js
           if [ -d lib ]; then cp -r lib dist/lib; fi
           if [ -d data ]; then cp -r data dist/data; fi
+          if [ -d assets ]; then cp -r assets dist/assets; fi
+          if [ -d image ]; then cp -r image dist/image; fi
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

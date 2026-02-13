@@ -2,6 +2,7 @@ const chatEl = document.querySelector("#chat");
 const formEl = document.querySelector("#input-form");
 const inputEl = document.querySelector("#user-input");
 const sendBtnEl = document.querySelector("#send-btn");
+const newReadingBtnEl = document.querySelector("#new-reading-btn");
 const messageTemplate = document.querySelector("#message-template");
 const cardPickerEl = document.querySelector("#card-picker");
 const cardGridEl = document.querySelector("#card-grid");
@@ -34,6 +35,7 @@ let pendingCategory = "연애";
 let pendingFilter = "all";
 let selectedCardStates = [];
 let tarotDeck = [];
+let pickerDeck = [];
 let novelRings = [];
 
 function addMessage(role, text) {
@@ -42,6 +44,15 @@ function addMessage(role, text) {
   node.querySelector(".bubble").textContent = text;
   chatEl.appendChild(node);
   chatEl.scrollTop = chatEl.scrollHeight;
+}
+
+function shuffleDeck(cards) {
+  const shuffled = [...cards];
+  for (let i = shuffled.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
 }
 
 function setInputState(enabled, placeholder = "") {
@@ -208,12 +219,18 @@ function resetPicker() {
   renderDirectionPanel();
 }
 
+function reshufflePickerDeck() {
+  pickerDeck = shuffleDeck(tarotDeck);
+  renderCardGrid();
+  resetPicker();
+}
+
 function openPicker() {
   stage = "pick";
   cardPickerEl.classList.add("active");
+  reshufflePickerDeck();
   addMessage("bot", `좋아요. 카드 ${tarotDeck.length}장 중 3장을 고르고, 각 카드의 정방향/역방향을 직접 선택한 뒤 해석을 시작해주세요.`);
   setInputState(false, "카드 선택 중...");
-  resetPicker();
 }
 
 function closePicker() {
@@ -222,8 +239,9 @@ function closePicker() {
 
 function renderCardGrid() {
   const fragment = document.createDocumentFragment();
+  const sourceDeck = pickerDeck.length ? pickerDeck : tarotDeck;
 
-  tarotDeck.forEach((card) => {
+  sourceDeck.forEach((card) => {
     const displayNo = card.id + 1;
     const button = document.createElement("button");
     button.type = "button";
@@ -493,6 +511,16 @@ function setCardDirection(cardId, direction) {
   renderDirectionPanel();
 }
 
+function startNewConsultation() {
+  if (!tarotDeck.length) return;
+  pendingQuestion = "";
+  closePicker();
+  stage = "question";
+  reshufflePickerDeck();
+  setInputState(true, "새 질문을 입력해주세요");
+  addMessage("bot", "새로운 상담을 시작합니다. 카드를 다시 섞었어요.");
+}
+
 function showIntro() {
   addMessage("bot", "안녕하세요. 타로 상담을 시작할게요.");
   addMessage("bot", "질문 카테고리와 추천 필터를 고른 뒤 질문을 보내주세요.");
@@ -514,6 +542,10 @@ formEl.addEventListener("submit", (event) => {
   inputEl.value = "";
   pendingQuestion = text;
   openPicker();
+});
+
+newReadingBtnEl?.addEventListener("click", () => {
+  startNewConsultation();
 });
 
 cardGridEl.addEventListener("click", (event) => {
@@ -571,6 +603,7 @@ async function init() {
 
   try {
     await Promise.all([loadNovelRings(), loadTarotDeck()]);
+    pickerDeck = shuffleDeck(tarotDeck);
     renderCardGrid();
     updatePickerStatus();
     renderDirectionPanel();
